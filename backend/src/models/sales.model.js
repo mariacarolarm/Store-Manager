@@ -13,7 +13,7 @@ const getAll = async () => {
 
 const getById = async (id) => {
   const query = `
-    SELECT sp.sale_id AS saleId, s.date, sp.product_id AS productId, sp.quantity
+    SELECT s.date, sp.product_id AS productId, sp.quantity
     FROM sales_products sp
     JOIN sales s ON sp.sale_id = s.id
     WHERE sp.sale_id = ?

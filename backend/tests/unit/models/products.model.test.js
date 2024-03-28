@@ -2,6 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const connection = require('../../../src/models/connection');
 const { returnAllProducts, returnProductById } = require('../mocks/products.mock');
+const { createProduct } = require('../../../src/models/products.model');
 
 describe('Realizando testes - PRODUCTS MODEL', function () {
   afterEach(function () {
@@ -32,5 +33,14 @@ describe('Realizando testes - PRODUCTS MODEL', function () {
     const result = await connection.execute('SELECT * FROM StoreManager.products WHERE id = ?', [5]);
 
     expect(result).to.equal(null);
+  });
+  it('Testa inserção de novo produto', async function () {
+    sinon.stub(connection, 'execute').resolves([{ insertId: 4 }]);
+    const productName = 'ProdutoX';
+    const result = await createProduct(productName);
+
+    expect(result).to.have.property('id');
+    expect(result).to.have.property('name');
+    expect(result.name).to.equal(productName);
   });
 });

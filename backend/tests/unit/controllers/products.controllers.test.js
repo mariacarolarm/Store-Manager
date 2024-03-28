@@ -92,8 +92,26 @@ describe('Realizando testes - PRODUCT CONTROLLER', function () {
     });
     sinon.restore();
   });
-  it('should export productsModel', function () {
+  it('Deve exportar productsModel', function () {
     expect(barrel).to.have.property('productsModel');
     expect(barrel.productsModel).to.be.an('object');
+    sinon.restore();
+  });
+  it('Deve inserir novo produto', async function () {
+    sinon.stub(barrel.productsModel, 'createProduct').resolves({
+      id: 4, 
+      name: 'ProdutoX', 
+    });
+
+    const response = await chai.request(app)
+      .post('/products')
+      .send({ name: 'ProdutoX' }); 
+    expect(response.status).to.be.eq(201);
+    expect(response.body).to.deep.equal({
+      id: 4,
+      name: 'ProdutoX',
+    });
+  
+    sinon.restore();
   });
 });
