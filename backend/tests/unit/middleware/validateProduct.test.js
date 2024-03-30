@@ -1,8 +1,8 @@
 const sinon = require('sinon');
 const myMiddlewares = require('../../../src/middlewares/productValidation');
 
-describe('validateMiddleware', function () {
-  it('should call next if validation passes', function () {
+describe('Valida middleware', function () {
+  it('Deve chamar next se os campos forem validos', function () {
     const req = { body: { name: 'ValidProductName' } };
     const res = {};
     const next = sinon.stub();
@@ -12,7 +12,7 @@ describe('validateMiddleware', function () {
     sinon.assert.calledOnce(next);
   });
 
-  it('should send 400 status with error message if name is missing', function () {
+  it('Envia erro com status 400 se nao tiver name', function () {
     const req = { body: {} };
     const res = { status: sinon.stub().returnsThis(), json: sinon.stub() };
     const next = sinon.stub();
@@ -23,7 +23,7 @@ describe('validateMiddleware', function () {
     sinon.assert.notCalled(next);
   });
 
-  it('should send 422 status with error message if name is too short', function () {
+  it('Envia erro com status status 422 se name for menor do 5 caracteres', function () {
     const req = { body: { name: 'nd' } };
     const res = { status: sinon.stub().returnsThis(), json: sinon.stub() };
     const next = sinon.stub();

@@ -3,6 +3,8 @@ const chaiHttp = require('chai-http');
 const sinon = require('sinon');
 const app = require('../../../src/app');
 const connection = require('../../../src/models/connection');
+const salesModel = require('../../../src/models/sales.model');
+const salesController = require('../../../src/controllers/sales.controllers');
 
 chai.use(chaiHttp);
 
@@ -62,5 +64,26 @@ describe('Realizando testes - SALES CONTROLLER', function () {
     expect(response.body).to.deep.equal({
       message: 'Sale not found',
     });
+  });
+
+  it('Deve fazer uma nova venda e retornar o status 201', async function () {
+    const req = {
+      body: [
+        { productId: 1, quantity: 2 },
+        { productId: 2, quantity: 3 },
+      ],
+    };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    const newSaleReturnValue = { id: 123, itemsSold: req.body };
+    sinon.stub(salesModel, 'newSale').resolves(newSaleReturnValue);
+
+    await salesController.addNewSale(req, res);
+
+    sinon.assert.calledWith(res.status, 201);
+    sinon.assert.calledWith(res.json, newSaleReturnValue);
   });
 });

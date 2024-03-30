@@ -12,4 +12,9 @@ const getSaleById = async (req, res) => {
   res.status(200).json(sale);
 };
 
-module.exports = { getSales, getSaleById };
+const addNewSale = async (req, res) => {
+  const newSale = await salesModel.newSale(req.body);
+  res.status(201).json(newSale);
+};
+
+module.exports = { getSales, getSaleById, addNewSale };
