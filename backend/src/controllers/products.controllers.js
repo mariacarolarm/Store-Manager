@@ -27,8 +27,26 @@ const newProduct = async (req, res) => {
   res.status(201).json(product);
 };
 
+const updateProduct = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { name } = req.body;
+
+  try {
+    const updated = await requireProducts.updateProductById(id, name);
+
+    if (updated) {
+      res.status(200).json({ id, name });
+    } else {
+      res.status(404).json({ message: 'Product not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getAll,
   getById,
   newProduct,
+  updateProduct,
 };

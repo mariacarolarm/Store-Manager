@@ -23,8 +23,22 @@ const createProduct = async (name) => {
   return { id: insertId, name };
 };
 
+const updateProductById = async (productId, newName) => {
+  try {
+    const [result] = await connection.execute(
+      'UPDATE products SET name = ? WHERE id = ?',
+      [newName, productId],
+    );
+    return result.affectedRows > 0;
+  } catch (error) {
+    console.error('Error updating product:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   findAll,
   findById,
   createProduct,
+  updateProductById,
 };
