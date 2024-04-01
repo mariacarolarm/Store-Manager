@@ -5,6 +5,7 @@ const app = require('../../../src/app');
 const connection = require('../../../src/models/connection');
 const requireProducts = require('../../../src/models/products.model');
 const barrel = require('../../../src/models/index');
+const productsModel = require('../../../src/models/products.model');
 
 chai.use(chaiHttp);
 
@@ -113,5 +114,47 @@ describe('Realizando testes - PRODUCT CONTROLLER', function () {
     });
   
     sinon.restore();
+  });
+  describe('Atualizando produtos', function () {
+    beforeEach(sinon.restore);
+  
+    it('Deve atualizar produto existente', async function () {
+      sinon.stub(productsModel, 'updateProductById').resolves(true);
+
+      const response = await chai.request(app)
+        .put('/products/1')
+        .send({ name: 'ProdutoX' });
+      expect(response.status).to.be.eq(200);
+      expect(response.body).to.deep.equal({
+        id: 1,
+        name: 'ProdutoX',
+      });
+
+      sinon.restore();
+    });
+  
+    it('Deve retornar status 404 se id nao existir', async function () {
+      sinon.stub(productsModel, 'updateProductById').resolves(false);
+
+      const response = await chai.request(app)
+        .put('/products/1')
+        .send({ name: 'ProdutoX' });
+      expect(response.status).to.be.eq(404);
+      expect(response.body).to.deep.equal({ message: 'Product not found' });
+
+      sinon.restore();
+    });
+  
+    it('Lida com erro interno do server', async function () {
+      sinon.stub(productsModel, 'updateProductById').throws(new Error('Internal server error'));
+
+      const response = await chai.request(app)
+        .put('/products/1')
+        .send({ name: 'ProdutoX' });
+      expect(response.status).to.be.eq(500);
+      expect(response.body).to.deep.equal({ message: 'Internal server error' });
+
+      sinon.restore();
+    });
   });
 });

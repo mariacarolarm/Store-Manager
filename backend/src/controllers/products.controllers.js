@@ -44,9 +44,26 @@ const updateProduct = async (req, res) => {
   }
 };
 
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleted = await requireProducts.deleteProductById(id);
+
+    if (deleted) {
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: 'Product not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getAll,
   getById,
   newProduct,
   updateProduct,
+  deleteProduct,
 };
