@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const connection = require('../../../src/models/connection');
 const { returnAllProducts, returnProductById } = require('../mocks/products.mock');
-const { createProduct } = require('../../../src/models/products.model');
+const { createProduct, deleteProductById, updateProductById } = require('../../../src/models/products.model');
 
 describe('Realizando testes - PRODUCTS MODEL', function () {
   afterEach(function () {
@@ -42,5 +42,28 @@ describe('Realizando testes - PRODUCTS MODEL', function () {
     expect(result).to.have.property('id');
     expect(result).to.have.property('name');
     expect(result.name).to.equal(productName);
+  });
+  it('Testa se atualiza um produto pelo id', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+    const id = 1;
+    const name = 'ProdutoX';
+    const result = await updateProductById(name, id);
+
+    expect(result).to.equal(true);
+  });
+  it('Testa se retorna erro ao atualizar um produto inexistente', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 0 }]);
+    const id = 5;
+    const name = 'ProdutoX';
+    const result = await updateProductById(name, id);
+
+    expect(result).to.equal(false);
+  });
+  it('Testa se deleta um produto pelo id', async function () {
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: 1 }]);
+    const id = 1;
+    const result = await deleteProductById(id);
+
+    expect(result).to.equal(true);
   });
 });

@@ -17,4 +17,21 @@ const addNewSale = async (req, res) => {
   res.status(201).json(newSale);
 };
 
-module.exports = { getSales, getSaleById, addNewSale };
+const deleteSaleById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleted = await salesModel.deleteSale(id);
+
+    if (deleted) {
+      res.sendStatus(204);
+    } else {
+      res.status(404).json({ message: 'Sale not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+module.exports = { getSales, getSaleById, addNewSale, deleteSaleById };

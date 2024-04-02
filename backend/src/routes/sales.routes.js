@@ -12,5 +12,6 @@ salesRoutes.post(
   validateProdExistence, 
   salesController.addNewSale,
 );
+salesRoutes.delete('/:id', salesController.deleteSaleById);
 
 module.exports = salesRoutes;

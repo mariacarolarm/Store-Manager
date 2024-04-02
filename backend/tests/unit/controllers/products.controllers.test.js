@@ -10,6 +10,7 @@ const productsModel = require('../../../src/models/products.model');
 chai.use(chaiHttp);
 
 const { expect } = chai;
+const serverError = 'Internal server error';
 
 describe('Realizando testes - PRODUCT CONTROLLER', function () {
   beforeEach(sinon.restore);
@@ -72,7 +73,7 @@ describe('Realizando testes - PRODUCT CONTROLLER', function () {
     sinon.restore();
   });
   it('Testando a listagem de produtos com erro', async function () {
-    const error = new Error('Internal server error');
+    const error = new Error(serverError);
     sinon.stub(requireProducts, 'findAll').rejects(error);
 
     const response = await chai.request(app).get('/products');
@@ -83,7 +84,7 @@ describe('Realizando testes - PRODUCT CONTROLLER', function () {
     sinon.restore();
   });
   it('Testando listagem por id com erro', async function () {
-    const error = new Error('Internal server error');
+    const error = new Error(serverError);
     sinon.stub(requireProducts, 'findById').rejects(error);
 
     const response = await chai.request(app).get('/products/2');
@@ -137,7 +138,7 @@ describe('Realizando testes - PRODUCT CONTROLLER', function () {
       sinon.stub(productsModel, 'updateProductById').resolves(false);
 
       const response = await chai.request(app)
-        .put('/products/1')
+        .put('/products/500')
         .send({ name: 'ProdutoX' });
       expect(response.status).to.be.eq(404);
       expect(response.body).to.deep.equal({ message: 'Product not found' });
@@ -146,11 +147,37 @@ describe('Realizando testes - PRODUCT CONTROLLER', function () {
     });
   
     it('Lida com erro interno do server', async function () {
-      sinon.stub(productsModel, 'updateProductById').throws(new Error('Internal server error'));
+      sinon.stub(productsModel, 'updateProductById').throws(new Error(serverError));
 
       const response = await chai.request(app)
-        .put('/products/1')
+        .put('/products/123')
         .send({ name: 'ProdutoX' });
+      expect(response.status).to.be.eq(500);
+      expect(response.body).to.deep.equal({ message: 'Internal server error' });
+
+      sinon.restore();
+    });
+    it('Testa delete de produto por id', async function () {
+      sinon.stub(productsModel, 'deleteProductById').resolves(true);
+
+      const response = await chai.request(app).delete('/products/1');
+      expect(response.status).to.be.eq(204);
+
+      sinon.restore();
+    });
+    it('Testa delete de produto com erro de Product not found', async function () {
+      sinon.stub(productsModel, 'deleteProductById').resolves(false);
+
+      const response = await chai.request(app).delete('/products/1');
+      expect(response.status).to.be.eq(404);
+      expect(response.body).to.deep.equal({ message: 'Product not found' });
+
+      sinon.restore();
+    });
+    it('Testa delete de produto com erro interno do server', async function () {  
+      sinon.stub(productsModel, 'deleteProductById').throws(new Error(serverError));
+
+      const response = await chai.request(app).delete('/products/1');
       expect(response.status).to.be.eq(500);
       expect(response.body).to.deep.equal({ message: 'Internal server error' });
 

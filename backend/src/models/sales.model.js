@@ -38,8 +38,14 @@ const newSale = async (sale) => {
   return { id: insertId, itemsSold: sale };
 };
 
+const deleteSale = async (id) => {
+  const [result] = await connection.execute('DELETE FROM sales WHERE id = ?', [id]);
+  return result.affectedRows > 0;
+};
+
 module.exports = {
   getAll,
   getById,
   newSale,
+  deleteSale,
 };
