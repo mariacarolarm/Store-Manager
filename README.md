@@ -1,10 +1,30 @@
-# :construction: README em construção ! :construction:
-<!-- Olá, Tryber!
-Esse é apenas um arquivo inicial para o README do seu projeto.
-É essencial que você preencha esse documento por conta própria, ok?
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
-:warning: IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
--->
+# Projeto de API RESTful
+
+Neste projeto eu desenvolvi uma API RESTful utilizando a arquitetura em camadas, com Model, Service e Controller.
+
+A API construída é um sistema de gerenciamento de vendas em que é possível criar, visualizar, deletar e atualizar produtos e vendas. Também utilizei aqui o banco de dados MySQL para a gestão de dados.
+
+Desenvolvi testes com Mocha, Chai e Sinon para garantir as funcionalidades das implementações, demonstrando esta habilidade essencial para pessoas desenvolvedoras.
+
+Utilizei também Docker Compose.
+
+## Rotas Desenvolvidas
+
+- **GET /products**
+- **GET /products/:id**
+- **GET /sales**
+- **GET /sales/:id**
+- **POST /products**
+- **PUT /products/:id**
+- **DELETE /products/:id**
+
+## Tecnologias Utilizadas
+
+- Node.js
+- Express
+- MySQL
+- Docker
+- Docker Compose
+- Mocha
+- Chai
+- Sinon
